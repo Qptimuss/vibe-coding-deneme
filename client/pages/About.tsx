@@ -119,8 +119,8 @@ export default function About() {
               ÖĞRENMEYE HAZIR MISIN?
             </h3>
             
-            <h2 className="font-outfit text-3xl sm:text-4xl lg:text-[60px] font-bold leading-[100%] capitalize mb-8 lg:mb-12 max-w-[659px] text-white">
-              teknolojinin yenilikler dünyasını keşfet
+            <h2 className="font-outfit text-3xl sm:text-4xl lg:text-[60px] font-bold capitalize mb-8 lg:mb-12 max-w-[659px] text-white">
+              teknolojinin yenilikler<br />dünyasını keşfet
             </h2>
 
             <button className="px-12 py-6 lg:py-7 bg-brand-purple bg-opacity-70 backdrop-blur-sm rounded-[50px] font-outfit text-[17px] font-semibold uppercase tracking-[1.7px] hover:bg-opacity-90 transition-all text-white">
