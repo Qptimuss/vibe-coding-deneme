@@ -1,6 +1,6 @@
 import React, { useState, useEffect, createContext, useContext } from 'react';
 import { Session } from '@supabase/supabase-js';
-import { supabase } from './client';
+import { supabase } from '@/integrations/supabase/client'; // Yol güncellendi
 import { useNavigate } from 'react-router-dom';
 
 interface SessionContextType {

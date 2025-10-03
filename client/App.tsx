@@ -13,8 +13,8 @@ import Contact from "./pages/Contact";
 import BuyNfts from "./pages/BuyNfts";
 import NotFound from "./pages/NotFound";
 import Navbar from "@/components/Navbar";
-import Login from "./pages/Login"; // Login sayfasını import ettik
-import { SessionContextProvider } from "@/integrations/supabase/auth"; // SessionContextProvider'ı import ettik
+import Login from "./pages/Login";
+import { SessionContextProvider } from "@/integrations/supabase/auth"; // Yol güncellendi
 
 const queryClient = new QueryClient();
 
@@ -24,7 +24,7 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
-        <SessionContextProvider> {/* SessionContextProvider ile sarmaladık */}
+        <SessionContextProvider>
           <Navbar />
           <Routes>
             <Route path="/" element={<Index />} />
@@ -32,7 +32,7 @@ const App = () => (
             <Route path="/pricing" element={<Pricing />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/buy-nfts" element={<BuyNfts />} />
-            <Route path="/login" element={<Login />} /> {/* Login rotasını ekledik */}
+            <Route path="/login" element={<Login />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
