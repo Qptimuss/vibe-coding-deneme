@@ -106,11 +106,11 @@ export default function Index() {
 
       {/* Testimonials Section */}
       <section className="max-w-[1440px] mx-auto px-4 sm:px-8 lg:px-[188px] py-16 lg:py-24">
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-12">
+        <div className="grid md:grid-cols-2 lg:grid-cols-2 gap-8 lg:gap-12"> {/* lg:grid-cols-3 -> lg:grid-cols-2 */}
           {[1, 2, 3].map((item) => (
             <div key={item} className="relative">
-              <div className="bg-brand-card rounded-[38px] p-8 text-center"> {/* pt-28 kaldırıldı, p-8 yapıldı */}
-                <div className="absolute top-[-78px] left-1/2 -translate-x-1/2"> {/* top-0 ve -translate-y-1/2 değiştirildi */}
+              <div className="bg-brand-card rounded-[38px] py-6 px-8 text-center"> {/* p-8 pt-28 -> py-6 px-8 */}
+                <div className="absolute top-[-78px] left-1/2 -translate-x-1/2">
                   <div className="relative">
                     <img 
                       src="https://api.builder.io/api/v1/image/assets/TEMP/05a0606b7c8cfd37b98bfdc42075d985857fbf93?width=312" 
@@ -121,7 +121,7 @@ export default function Index() {
                   </div>
                 </div>
 
-                <h4 className="font-outfit text-[17px] font-semibold uppercase tracking-[1.7px] mb-6 mt-[78px]"> {/* Fotoğrafın yüksekliği kadar boşluk eklendi */}
+                <h4 className="font-outfit text-[17px] font-semibold uppercase tracking-[1.7px] mb-6 mt-[78px]">
                   OLIVIA COLE
                 </h4>
 
