@@ -14,7 +14,8 @@ import BuyNfts from "./pages/BuyNfts";
 import NotFound from "./pages/NotFound";
 import Navbar from "@/components/Navbar";
 import Login from "./pages/Login";
-import { SessionContextProvider } from "@/integrations/supabase/auth"; // Yol güncellendi
+import CommentsPage from "./pages/CommentsPage"; // Yeni yorumlar sayfasını import et
+import { SessionContextProvider } from "@/integrations/supabase/auth";
 
 const queryClient = new QueryClient();
 
@@ -33,6 +34,7 @@ const App = () => (
             <Route path="/contact" element={<Contact />} />
             <Route path="/buy-nfts" element={<BuyNfts />} />
             <Route path="/login" element={<Login />} />
+            <Route path="/comments" element={<CommentsPage />} /> {/* Yeni yorumlar rotası */}
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

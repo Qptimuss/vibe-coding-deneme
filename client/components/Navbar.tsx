@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { Button } from "@/components/ui/button"; // Button bileşenini import et
 
 export default function Navbar() {
   return (
@@ -32,6 +33,17 @@ export default function Navbar() {
             className="rounded-md px-3 py-2 bg-white/5 hover:bg-white/10 active:bg-white/15 hover:text-brand-cyan transition-all duration-200"
           >
             buy nfts
+          </Link>
+          <Link 
+            to="/comments" 
+            className="rounded-md px-3 py-2 bg-white/5 hover:bg-white/10 active:bg-white/15 hover:text-brand-cyan transition-all duration-200"
+          >
+            comments
+          </Link>
+          <Link to="/login">
+            <Button variant="default" size="sm" className="bg-brand-purple hover:bg-brand-purple/80 text-white">
+              Giriş Yap
+            </Button>
           </Link>
         </div>
 
