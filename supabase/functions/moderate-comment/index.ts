@@ -15,8 +15,17 @@ serve(async (req) => {
   try {
     const { commentId, content } = await req.json();
 
+    const openaiApiKey = Deno.env.get("OPENAI_API_KEY");
+    if (!openaiApiKey) {
+      console.error("OPENAI_API_KEY is not set in Supabase secrets.");
+      return new Response(JSON.stringify({ error: "Server configuration error: OpenAI API key is missing." }), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: 500,
+      });
+    }
+
     const openai = new OpenAI({
-      apiKey: Deno.env.get("OPENAI_API_KEY"),
+      apiKey: openaiApiKey,
     });
 
     const moderationResponse = await openai.moderations.create({
@@ -31,7 +40,6 @@ serve(async (req) => {
     );
 
     if (results.flagged) {
-      // Yorum denetimden geçemedi, is_moderated'ı false olarak bırak veya başka bir işlem yap
       await supabaseAdmin
         .from("comments")
         .update({ is_moderated: false })
@@ -46,7 +54,6 @@ serve(async (req) => {
         status: 200,
       });
     } else {
-      // Yorum denetimden geçti, is_moderated'ı true olarak ayarla
       await supabaseAdmin
         .from("comments")
         .update({ is_moderated: true })
@@ -61,8 +68,8 @@ serve(async (req) => {
       });
     }
   } catch (error) {
-    console.error("Error moderating comment:", error);
-    return new Response(JSON.stringify({ error: error.message }), {
+    console.error("Error moderating comment:", error); // Hatanın tamamını logla
+    return new Response(JSON.stringify({ error: error.message || "An unknown error occurred in the moderation function." }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
       status: 500,
     });
