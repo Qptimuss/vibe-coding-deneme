@@ -1,11 +1,11 @@
-import Navbar from "@/components/Navbar";
+// Navbar importunu kaldırdık
 
 export default function Contact() {
   return (
     <div className="min-h-screen bg-brand-dark text-white">
-      <Navbar />
+      {/* Navbar kaldırıldı */}
       
-      <div className="max-w-[1440px] mx-auto px-4 sm:px-8 lg:px-[188px] py-16">
+      <div className="max-w-[1440px] mx-auto px-4 sm:px-8 lg:px-[188px] py-16 pt-24"> {/* pt-24 eklendi */}
         <div className="text-center space-y-6">
           <h1 className="font-outfit text-4xl lg:text-6xl font-bold capitalize">
             Contact Us

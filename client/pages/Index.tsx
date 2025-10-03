@@ -1,4 +1,4 @@
-import Navbar from "@/components/Navbar";
+// Navbar importunu kaldırdık
 
 export default function Index() {
   return (
@@ -7,10 +7,10 @@ export default function Index() {
       <div className="absolute top-[-200px] left-[-100px] w-[775px] h-[775px] rounded-full bg-brand-purple opacity-50 blur-[185px] pointer-events-none" />
       <div className="absolute top-[400px] right-[-200px] w-[775px] h-[775px] rounded-full bg-brand-cyan opacity-80 blur-[246px] pointer-events-none" />
 
-      <Navbar />
+      {/* Navbar kaldırıldı */}
 
       {/* Hero Section */}
-      <section className="max-w-[1440px] mx-auto px-4 sm:px-8 lg:px-[188px] py-8 lg:py-16">
+      <section className="max-w-[1440px] mx-auto px-4 sm:px-8 lg:px-[188px] py-8 lg:py-16 pt-24"> {/* pt-24 eklendi */}
         <div className="grid lg:grid-cols-2 gap-8 lg:gap-16 items-center">
           <div className="space-y-8 lg:space-y-12">
             <h1 className="font-outfit text-4xl sm:text-5xl lg:text-[75px] font-bold leading-[100%] capitalize">

@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 
 export default function Navbar() {
   return (
-    <nav className="w-full max-w-[1440px] mx-auto px-4 sm:px-8 lg:px-[188px] py-8 lg:py-[69px]">
+    <nav className="w-full sticky top-0 z-50 bg-[#000034] max-w-[1440px] mx-auto px-4 sm:px-8 lg:px-[188px] py-8 lg:py-[69px]">
       <div className="flex items-center justify-between">
         <Link to="/" className="font-outfit text-xl font-bold uppercase text-white">
           KRYPTO

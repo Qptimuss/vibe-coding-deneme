@@ -12,6 +12,7 @@ import Pricing from "./pages/Pricing";
 import Contact from "./pages/Contact";
 import BuyNfts from "./pages/BuyNfts";
 import NotFound from "./pages/NotFound";
+import Navbar from "@/components/Navbar"; // Navbar'ı buraya taşıdık
 
 const queryClient = new QueryClient();
 
@@ -21,6 +22,7 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
+        <Navbar /> {/* Navbar'ı buraya taşıdık */}
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/about" element={<About />} />
