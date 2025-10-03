@@ -2,23 +2,35 @@ import { Link } from "react-router-dom";
 
 export default function Navbar() {
   return (
-    <nav className="w-full sticky top-0 z-50 bg-[#000034] max-w-[1440px] mx-auto px-4 sm:px-8 lg:px-[188px] py-8 lg:py-[69px]">
+    <nav className="w-full sticky top-0 z-50 bg-[#000034] max-w-[1440px] mx-auto px-4 sm:px-8 lg:px-[188px] py-4 lg:py-6">
       <div className="flex items-center justify-between">
         <Link to="/" className="font-outfit text-xl font-bold uppercase text-white">
           KRYPTO
         </Link>
         
-        <div className="hidden md:flex items-center gap-8 lg:gap-[50px] font-outfit text-lg lg:text-xl text-white">
-          <Link to="/about" className="hover:text-brand-cyan transition-colors">
+        <div className="hidden md:flex items-center gap-2 lg:gap-4 font-outfit text-lg lg:text-xl text-white">
+          <Link 
+            to="/about" 
+            className="rounded-md px-3 py-2 bg-white/5 hover:bg-white/10 active:bg-white/15 hover:text-brand-cyan transition-all duration-200"
+          >
             about
           </Link>
-          <Link to="/pricing" className="hover:text-brand-cyan transition-colors">
+          <Link 
+            to="/pricing" 
+            className="rounded-md px-3 py-2 bg-white/5 hover:bg-white/10 active:bg-white/15 hover:text-brand-cyan transition-all duration-200"
+          >
             pricing
           </Link>
-          <Link to="/contact" className="hover:text-brand-cyan transition-colors">
+          <Link 
+            to="/contact" 
+            className="rounded-md px-3 py-2 bg-white/5 hover:bg-white/10 active:bg-white/15 hover:text-brand-cyan transition-all duration-200"
+          >
             contact
           </Link>
-          <Link to="/buy-nfts" className="hover:text-brand-cyan transition-colors">
+          <Link 
+            to="/buy-nfts" 
+            className="rounded-md px-3 py-2 bg-white/5 hover:bg-white/10 active:bg-white/15 hover:text-brand-cyan transition-all duration-200"
+          >
             buy nfts
           </Link>
         </div>
