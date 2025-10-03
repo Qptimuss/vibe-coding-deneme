@@ -30,7 +30,7 @@ interface CommentFormProps {
 }
 
 export const CommentForm: React.FC<CommentFormProps> = ({ onCommentSubmitted }) => {
-  const { session } = useSession();
+  const { session, isLoading } = useSession(); // isLoading de eklendi
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -110,15 +110,19 @@ export const CommentForm: React.FC<CommentFormProps> = ({ onCommentSubmitted }) 
                   className="flex w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                   placeholder="Yorumunuzu buraya yazın..."
                   {...field}
+                  disabled={!session || isLoading} // Oturum yoksa veya yükleniyorsa devre dışı bırak
                 />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
-        <Button type="submit" disabled={form.formState.isSubmitting} className="bg-brand-purple hover:bg-brand-purple/80 text-white">
+        <Button type="submit" disabled={!session || isLoading || form.formState.isSubmitting} className="bg-brand-purple hover:bg-brand-purple/80 text-white">
           Yorum Gönder
         </Button>
+        {!session && !isLoading && ( // Oturum yoksa ve yükleme bittiyse mesajı göster
+          <p className="text-sm text-red-400 mt-2">Yorum göndermek için giriş yapmalısınız.</p>
+        )}
       </form>
     </Form>
   );
