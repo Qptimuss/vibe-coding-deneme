@@ -109,8 +109,8 @@ export default function Index() {
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-12">
           {[1, 2, 3].map((item) => (
             <div key={item} className="relative">
-              <div className="bg-brand-card rounded-[38px] p-8 pt-28 text-center">
-                <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2">
+              <div className="bg-brand-card rounded-[38px] p-8 text-center"> {/* pt-28 kaldırıldı, p-8 yapıldı */}
+                <div className="absolute top-[-78px] left-1/2 -translate-x-1/2"> {/* top-0 ve -translate-y-1/2 değiştirildi */}
                   <div className="relative">
                     <img 
                       src="https://api.builder.io/api/v1/image/assets/TEMP/05a0606b7c8cfd37b98bfdc42075d985857fbf93?width=312" 
@@ -121,7 +121,7 @@ export default function Index() {
                   </div>
                 </div>
 
-                <h4 className="font-outfit text-[17px] font-semibold uppercase tracking-[1.7px] mb-6">
+                <h4 className="font-outfit text-[17px] font-semibold uppercase tracking-[1.7px] mb-6 mt-[78px]"> {/* Fotoğrafın yüksekliği kadar boşluk eklendi */}
                   OLIVIA COLE
                 </h4>
 
