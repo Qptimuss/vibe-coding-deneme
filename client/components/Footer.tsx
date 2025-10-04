@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Github, Instagram, X, Linkedin } from 'lucide-react'; // Twitter ikonunu X olarak güncelledik
+import { Github, Instagram, Linkedin } from 'lucide-react'; // X ikonunu kaldırdık
+import XBrandLogo from '@/components/XBrandLogo'; // Yeni XBrandLogo bileşenini import ettik
 
 export default function Footer() {
   return (
@@ -22,7 +23,7 @@ export default function Footer() {
               <Instagram size={24} />
             </a>
             <a href="https://twitter.com/your-twitter" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-brand-cyan transition-colors">
-              <X size={24} className="rotate-6" /> {/* X ikonuna rotate-6 sınıfı eklendi */}
+              <XBrandLogo size={24} className="text-gray-400 hover:text-brand-cyan transition-colors" /> {/* XBrandLogo bileşenini kullandık */}
             </a>
             <a href="https://linkedin.com/in/your-linkedin" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-brand-cyan transition-colors">
               <Linkedin size={24} />
