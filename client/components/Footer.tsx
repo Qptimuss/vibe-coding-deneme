@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Github, Instagram, Twitter, Linkedin } from 'lucide-react'; // Sosyal medya ikonları için lucide-react kullanıldı
+import { Github, Instagram, X, Linkedin } from 'lucide-react'; // Twitter ikonunu X olarak güncelledik
 
 export default function Footer() {
   return (
@@ -22,7 +22,7 @@ export default function Footer() {
               <Instagram size={24} />
             </a>
             <a href="https://twitter.com/your-twitter" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-brand-cyan transition-colors">
-              <Twitter size={24} />
+              <X size={24} /> {/* Twitter ikonunu X olarak kullandık */}
             </a>
             <a href="https://linkedin.com/in/your-linkedin" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-brand-cyan transition-colors">
               <Linkedin size={24} />
