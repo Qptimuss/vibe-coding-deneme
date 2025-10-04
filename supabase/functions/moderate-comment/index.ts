@@ -23,7 +23,8 @@ const WHOLE_WORD_BANNED = new Set([
   "kahpe", "döl", "bok", "salak", "aptal", "gerizekalı", "beyinsiz", "mal", "sik", "yarrak", "am", "porno",
   "sex", "vajina", "penis", "meme", "göt", "anal", "oral", "sikiş", "seks", "cinsel", "erotik", "çıplak", "pornografi", "mastürbasyon", "tecavüz", "ensest",
   "sakso", "grupseks", "oral seks", "anal seks", "grup seks",
-  "sülale", "sülaleni" // Yeni eklenen kelimeler
+  "sülale", "sülaleni", // Ailevi hakaretler
+  "domal", "domalmak", "domalan", "domalt", "domaltmak", "domaltan" // Cinsel içerikli kelimeler
 ]);
 
 // Alt dize olarak eşleşmesi gereken yasaklı kelimeler (includes kullanılarak)
