@@ -7,10 +7,10 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
-// Toksisite eşiği: LABEL_1 (toksik) puanı bu değerin üzerindeyse yorum toksik kabul edilir.
+// Toksisite eşiği: Bu değerin üzerindeki puanlar toksik kabul edilir.
 const TOXICITY_THRESHOLD = 0.5; 
 
-// Açıkça yasaklı kelimeler listesi
+// Açıkça yasaklı kelimeler listesi (hem Türkçe hem İngilizce)
 const BANNED_WORDS = new Set([
   "nigger", "fuck", "shit", "cunt", "asshole", "bitch", "bastard", "motherfucker",
   "faggot", "retard", "idiot", "moron", "kancık", "orospu", "piç", "siktir", "amcık",
@@ -62,7 +62,7 @@ serve(async (req) => {
       return new Response(JSON.stringify({
         message: "Comment flagged by explicit keyword filter. It will not be publicly visible.",
         is_moderated: false,
-        toxicity_score: 1.0,
+        toxicity_score: 1.0, // Yasaklı kelime içerdiği için en yüksek toksisite puanı
       }), {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
         status: 200,
@@ -71,43 +71,46 @@ serve(async (req) => {
 
     // 2. Hugging Face toksisite denetimi (eğer yasaklı kelime bulunmazsa)
     const hf = new HfInference(huggingfaceApiKey);
-    let moderationResponse;
+    let englishToxicScore = 0;
+    let turkishToxicScore = 0;
+
+    // İngilizce toksisite modeli
     try {
-      // Modeli 'unitary/toxic-bert' olarak değiştirildi
-      moderationResponse = await hf.textClassification({
+      const englishModerationResponse = await hf.textClassification({
         model: 'unitary/toxic-bert', 
         inputs: content,
       });
-      console.log("Hugging Face moderation response:", moderationResponse);
+      console.log("English model response:", englishModerationResponse);
+      const englishToxicLabel = englishModerationResponse.find(item => item.label.toLowerCase().includes('toxic') || item.label === 'LABEL_1');
+      if (englishToxicLabel) {
+        englishToxicScore = englishToxicLabel.score;
+      }
     } catch (hfError: any) {
-      console.error("Error calling Hugging Face API:", hfError.message || hfError);
-      await supabaseAdmin
-        .from("comments")
-        .update({ is_moderated: false }) 
-        .eq("id", commentId);
-      return new Response(JSON.stringify({
-        error: "Hugging Face API call failed.",
-        details: hfError.message || "Unknown error from Hugging Face API.",
-        is_moderated: false,
-      }), {
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-        status: 500,
+      console.error("Error calling English Hugging Face API:", hfError.message || hfError);
+      // Hata durumunda puanı 0 olarak bırak, diğer modelin sonucunu etkilemesin
+    }
+
+    // Türkçe toksisite modeli
+    try {
+      const turkishModerationResponse = await hf.textClassification({
+        model: 'savasy/bert-base-turkish-cased-toxic-detection', 
+        inputs: content,
       });
+      console.log("Turkish model response:", turkishModerationResponse);
+      const turkishToxicLabel = turkishModerationResponse.find(item => item.label.toLowerCase() === 'toxic');
+      if (turkishToxicLabel) {
+        turkishToxicScore = turkishToxicLabel.score;
+      }
+    } catch (hfError: any) {
+      console.error("Error calling Turkish Hugging Face API:", hfError.message || hfError);
+      // Hata durumunda puanı 0 olarak bırak, diğer modelin sonucunu etkilemesin
     }
 
-    let toxicScore = 0;
-    // 'unitary/toxic-bert' modeli farklı etiketler döndürebilir, bu yüzden 'toxic' veya 'LABEL_1' gibi etiketleri kontrol edelim.
-    const toxicLabel = moderationResponse.find(item => item.label.toLowerCase().includes('toxic') || item.label === 'LABEL_1');
-    if (toxicLabel) {
-      toxicScore = toxicLabel.score;
-      console.log("Found 'toxic' label with score:", toxicScore);
-    } else {
-      console.warn("Explicit 'toxic' label not found in Hugging Face response. Assuming non-toxic.");
-      toxicScore = 0;
-    }
-
-    const isToxic = toxicScore > TOXICITY_THRESHOLD;
-    console.log(`Toxicity score: ${toxicScore}, Threshold: ${TOXICITY_THRESHOLD}, Is toxic: ${isToxic}`);
+    // İki modelden gelen en yüksek toksisite puanını al
+    const combinedToxicScore = Math.max(englishToxicScore, turkishToxicScore);
+    const isToxic = combinedToxicScore > TOXICITY_THRESHOLD;
+    console.log(`English Toxic Score: ${englishToxicScore}, Turkish Toxic Score: ${turkishToxicScore}`);
+    console.log(`Combined Toxicity score: ${combinedToxicScore}, Threshold: ${TOXICITY_THRESHOLD}, Is toxic: ${isToxic}`);
 
     if (isToxic) {
       console.log("Comment flagged by AI moderation.");
@@ -119,7 +122,7 @@ serve(async (req) => {
       return new Response(JSON.stringify({
         message: "Comment flagged by AI moderation. It will not be publicly visible.",
         is_moderated: false,
-        toxicity_score: toxicScore,
+        toxicity_score: combinedToxicScore,
       }), {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
         status: 200,
@@ -134,7 +137,7 @@ serve(async (req) => {
       return new Response(JSON.stringify({
         message: "Comment passed moderation and is now visible.",
         is_moderated: true,
-        toxicity_score: toxicScore,
+        toxicity_score: combinedToxicScore,
       }), {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
         status: 200,
