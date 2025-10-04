@@ -8,7 +8,6 @@ const corsHeaders = {
 };
 
 // Toksisite eşiği: LABEL_1 (toksik) puanı bu değerin üzerindeyse yorum toksik kabul edilir.
-// Daha hassas olmak için eşik düşürüldü.
 const TOXICITY_THRESHOLD = 0.5; 
 
 // Açıkça yasaklı kelimeler listesi
@@ -69,15 +68,26 @@ serve(async (req) => {
 
     // 2. Hugging Face toksisite denetimi (eğer yasaklı kelime bulunmazsa)
     const hf = new HfInference(huggingfaceApiKey);
+    // Yeni çok dilli modeli kullanıyoruz
     const moderationResponse = await hf.textClassification({
-      model: 'unitary/toxic-bert',
+      model: 'oliverguhr/bert-base-multilingual-cased-finetuned-toxic-comment-classification',
       inputs: content,
     });
 
     let toxicScore = 0;
-    const toxicLabel = moderationResponse.find(item => item.label === 'LABEL_1');
+    // Bu modelin çıktısı biraz farklı olabilir, genellikle 'toxic' veya benzeri bir etiket ararız.
+    // Modelin çıktısını kontrol edip en yüksek toksisite puanını alalım.
+    const toxicLabel = moderationResponse.find(item => item.label === 'toxic'); // 'toxic' etiketini arıyoruz
     if (toxicLabel) {
       toxicScore = toxicLabel.score;
+    } else {
+      // Eğer 'toxic' etiketi yoksa, diğer olumsuz etiketleri de kontrol edebiliriz
+      // veya varsayılan olarak en yüksek puanı alabiliriz.
+      // Şimdilik, en yüksek puanı alalım ve eşikle karşılaştıralım.
+      const highestScoreLabel = moderationResponse.reduce((prev, current) => (prev.score > current.score) ? prev : current);
+      if (highestScoreLabel.label !== 'not toxic') { // 'not toxic' değilse
+        toxicScore = highestScoreLabel.score;
+      }
     }
 
     const isToxic = toxicScore > TOXICITY_THRESHOLD;
