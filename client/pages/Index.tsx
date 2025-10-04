@@ -106,10 +106,10 @@ export default function Index() {
 
       {/* Testimonials Section */}
       <section className="max-w-[1440px] mx-auto px-4 sm:px-8 lg:px-[188px] py-16 lg:py-24">
-        <div className="grid md:grid-cols-2 lg:grid-cols-2 gap-8 lg:gap-12">
+        <div className="grid md:grid-cols-2 lg:grid-cols-2 gap-12 lg:gap-16"> {/* gap-8 lg:gap-12 -> gap-12 lg:gap-16 olarak değiştirildi */}
           {[1, 2, 3].map((item) => (
             <div key={item} className="relative">
-              <div className="bg-brand-card rounded-[38px] pt-40 pb-6 px-8 text-center"> {/* pt-36'dan pt-40'a yükseltildi */}
+              <div className="bg-brand-card rounded-[38px] pt-40 pb-6 px-8 text-center">
                 <div className="absolute top-[-78px] left-1/2 -translate-x-1/2">
                   <div className="relative">
                     <img 
