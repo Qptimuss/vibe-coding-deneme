@@ -28,8 +28,8 @@ const WHOLE_WORD_BANNED = new Set([
 // Alt dize olarak eşleşmesi gereken yasaklı kelimeler (includes kullanılarak)
 const SUBSTRING_BANNED = new Set([
   "amk", "aq", "oç", "sikerim", "siktir git", "ananı", "babana", "yavşak", "gavat", "siktir lan", "götveren", "orosbu", "piçin", "ananın", "lan",
-  "anan", // Yeni eklenen kelime
-  "domal", "sik", "yarrak", "am", "göt" // WHOLE_WORD_BANNED'den taşınan kelimeler
+  "anan", "anne", "annen", // Yeni eklenen kelimeler
+  "domal", "sik", "yarrak", "am", "göt" 
 ]);
 
 serve(async (req) => {
