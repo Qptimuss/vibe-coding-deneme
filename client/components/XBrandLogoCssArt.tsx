@@ -21,10 +21,10 @@ const XBrandLogoCssArt: React.FC<XBrandLogoCssArtProps> = ({ size = 24, classNam
       <div
         className="absolute border-solid"
         style={{
-          borderTopWidth: `calc(var(--size) * 0.2)`, // Daha da kalınlaştırıldı
-          borderBottomWidth: `calc(var(--size) * 0.2)`, // Daha da kalınlaştırıldı
-          borderLeftWidth: `calc(var(--size) * 0.21)`, // Daha da kalınlaştırıldı
-          borderRightWidth: `calc(var(--size) * 0.21)`, // Daha da kalınlaştırıldı
+          borderTopWidth: `calc(var(--size) * 0.2)`,
+          borderBottomWidth: `calc(var(--size) * 0.2)`,
+          borderLeftWidth: `calc(var(--size) * 0.21)`,
+          borderRightWidth: `calc(var(--size) * 0.21)`,
           top: 0,
           left: `calc(50% - var(--size) * 0.142)`,
           width: `calc(var(--size) * 0.28)`,
@@ -35,7 +35,7 @@ const XBrandLogoCssArt: React.FC<XBrandLogoCssArtProps> = ({ size = 24, classNam
       <div
         className="absolute w-0 border-solid bg-current"
         style={{
-          borderWidth: `calc(var(--size) * 0.18)`, // Daha da kalınlaştırıldı
+          borderWidth: `calc(var(--size) * 0.18)`,
           height: `calc(var(--size) * 0.45)`,
           transform: 'skew(-41deg)',
           top: 0,
@@ -46,7 +46,7 @@ const XBrandLogoCssArt: React.FC<XBrandLogoCssArtProps> = ({ size = 24, classNam
       <div
         className="absolute w-0 border-solid bg-current"
         style={{
-          borderWidth: `calc(var(--size) * 0.18)`, // Daha da kalınlaştırıldı
+          borderWidth: `calc(var(--size) * 0.18)`,
           height: `calc(var(--size) * 0.45)`,
           transform: 'skew(-41deg)',
           left: `calc(50% - var(--size) * 0.304)`,
