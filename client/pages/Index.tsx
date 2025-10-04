@@ -109,7 +109,7 @@ export default function Index() {
         <div className="grid md:grid-cols-2 lg:grid-cols-2 gap-8 lg:gap-12">
           {[1, 2, 3].map((item) => (
             <div key={item} className="relative">
-              <div className="bg-brand-card rounded-[38px] pt-28 pb-6 px-8 text-center"> {/* pt-28 eklendi, py-6 -> pb-6 */}
+              <div className="bg-brand-card rounded-[38px] pt-36 pb-6 px-8 text-center"> {/* pt-28'den pt-36'ya yükseltildi */}
                 <div className="absolute top-[-78px] left-1/2 -translate-x-1/2">
                   <div className="relative">
                     <img 
@@ -121,7 +121,7 @@ export default function Index() {
                   </div>
                 </div>
 
-                <h4 className="font-outfit text-[17px] font-semibold uppercase tracking-[1.7px] mb-6"> {/* mt-[78px] kaldırıldı */}
+                <h4 className="font-outfit text-[17px] font-semibold uppercase tracking-[1.7px] mb-6">
                   OLIVIA COLE
                 </h4>
 
