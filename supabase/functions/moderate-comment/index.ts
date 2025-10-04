@@ -25,7 +25,7 @@ serve(async (req) => {
 
   try {
     const { commentId, content } = await req.json();
-    console.log("Received comment for moderation:", { commentId, content }); // Girişi logla
+    console.log("Received comment for moderation:", { commentId, content });
 
     const huggingfaceApiKey = Deno.env.get("HUGGINGFACE_API_KEY");
     if (!huggingfaceApiKey) {
@@ -35,7 +35,7 @@ serve(async (req) => {
         status: 500,
       });
     }
-    console.log("Hugging Face API key is present."); // API anahtarının varlığını onayla
+    console.log("Hugging Face API key is present.");
 
     const supabaseAdmin = createClient(
       Deno.env.get("SUPABASE_URL") ?? "",
@@ -62,7 +62,7 @@ serve(async (req) => {
       return new Response(JSON.stringify({
         message: "Comment flagged by explicit keyword filter. It will not be publicly visible.",
         is_moderated: false,
-        toxicity_score: 1.0, // Yasaklı kelime içerdiği için en yüksek toksisite puanı
+        toxicity_score: 1.0,
       }), {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
         status: 200,
@@ -73,14 +73,14 @@ serve(async (req) => {
     const hf = new HfInference(huggingfaceApiKey);
     let moderationResponse;
     try {
+      // Modeli 'unitary/toxic-bert' olarak değiştirildi
       moderationResponse = await hf.textClassification({
-        model: 'oliverguhr/bert-base-multilingual-cased-finetuned-toxic-comment-classification',
+        model: 'unitary/toxic-bert', 
         inputs: content,
       });
-      console.log("Hugging Face moderation response:", moderationResponse); // HF yanıtını logla
+      console.log("Hugging Face moderation response:", moderationResponse);
     } catch (hfError: any) {
       console.error("Error calling Hugging Face API:", hfError.message || hfError);
-      // Hugging Face API çağrısı başarısız olursa yorumu denetlenmemiş olarak işaretle
       await supabaseAdmin
         .from("comments")
         .update({ is_moderated: false }) 
@@ -96,16 +96,14 @@ serve(async (req) => {
     }
 
     let toxicScore = 0;
-    const toxicLabel = moderationResponse.find(item => item.label === 'toxic');
+    // 'unitary/toxic-bert' modeli farklı etiketler döndürebilir, bu yüzden 'toxic' veya 'LABEL_1' gibi etiketleri kontrol edelim.
+    const toxicLabel = moderationResponse.find(item => item.label.toLowerCase().includes('toxic') || item.label === 'LABEL_1');
     if (toxicLabel) {
       toxicScore = toxicLabel.score;
       console.log("Found 'toxic' label with score:", toxicScore);
     } else {
-      // Eğer 'toxic' etiketi açıkça bulunamazsa, varsayılan olarak toksik olmadığını varsayalım.
-      // Bu model için 'toxic' veya 'not toxic' etiketleri beklenir.
-      // Eğer 'toxic' yoksa, muhtemelen 'not toxic'tir veya beklenmedik bir çıktı vardır.
       console.warn("Explicit 'toxic' label not found in Hugging Face response. Assuming non-toxic.");
-      toxicScore = 0; // 'toxic' etiketi bulunamazsa 0 olarak ayarla
+      toxicScore = 0;
     }
 
     const isToxic = toxicScore > TOXICITY_THRESHOLD;
