@@ -1,5 +1,7 @@
 import { Link } from "react-router-dom";
-import { Button } from "@/components/ui/button"; // Button bileşenini import et
+import { Button } from "@/components/ui/button";
+import { Sheet, SheetContent, SheetTrigger, SheetClose } from "@/components/ui/sheet"; // Sheet bileşenlerini import et
+import { Menu } from "lucide-react"; // Menu ikonunu import et
 
 export default function Navbar() {
   return (
@@ -9,6 +11,7 @@ export default function Navbar() {
           KRYPTO
         </Link>
         
+        {/* Masaüstü Navigasyonu */}
         <div className="hidden md:flex items-center gap-2 lg:gap-4 font-outfit text-lg lg:text-xl text-white">
           <Link 
             to="/about" 
@@ -47,11 +50,66 @@ export default function Navbar() {
           </Link>
         </div>
 
-        <button className="md:hidden text-white">
-          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-          </svg>
-        </button>
+        {/* Mobil Hamburger Menü */}
+        <Sheet>
+          <SheetTrigger asChild>
+            <Button variant="ghost" size="icon" className="md:hidden text-white">
+              <Menu className="h-6 w-6" />
+              <span className="sr-only">Menüyü Aç/Kapat</span>
+            </Button>
+          </SheetTrigger>
+          <SheetContent side="right" className="w-[250px] sm:w-[300px] bg-brand-dark border-l border-brand-purple/50 p-6">
+            <div className="flex flex-col gap-4 pt-8">
+              <SheetClose asChild>
+                <Link 
+                  to="/about" 
+                  className="block w-full text-left rounded-md px-3 py-2 bg-white/5 hover:bg-white/10 active:bg-white/15 hover:text-brand-cyan transition-all duration-200 text-lg"
+                >
+                  about
+                </Link>
+              </SheetClose>
+              <SheetClose asChild>
+                <Link 
+                  to="/pricing" 
+                  className="block w-full text-left rounded-md px-3 py-2 bg-white/5 hover:bg-white/10 active:bg-white/15 hover:text-brand-cyan transition-all duration-200 text-lg"
+                >
+                  pricing
+                </Link>
+              </SheetClose>
+              <SheetClose asChild>
+                <Link 
+                  to="/contact" 
+                  className="block w-full text-left rounded-md px-3 py-2 bg-white/5 hover:bg-white/10 active:bg-white/15 hover:text-brand-cyan transition-all duration-200 text-lg"
+                >
+                  contact
+                </Link>
+              </SheetClose>
+              <SheetClose asChild>
+                <Link 
+                  to="/buy-nfts" 
+                  className="block w-full text-left rounded-md px-3 py-2 bg-white/5 hover:bg-white/10 active:bg-white/15 hover:text-brand-cyan transition-all duration-200 text-lg"
+                >
+                  buy nfts
+                </Link>
+              </SheetClose>
+              <SheetClose asChild>
+                <Link 
+                  to="/comments" 
+                  className="block w-full text-left rounded-md px-3 py-2 bg-white/5 hover:bg-white/10 active:bg-white/15 hover:text-brand-cyan transition-all duration-200 text-lg"
+                >
+                  comments
+                </Link>
+              </SheetClose>
+              <SheetClose asChild>
+                <Link to="/login" className="block w-full">
+                  <Button variant="default" size="lg" className="w-full bg-brand-purple hover:bg-brand-purple/80 text-white">
+                    Giriş Yap
+                  </Button>
+                </Link>
+              </SheetClose>
+            </div>
+          </SheetContent>
+        </Sheet>
       </div>
     </nav>
   );
