@@ -22,7 +22,8 @@ const WHOLE_WORD_BANNED = new Set([
   "kancık", "orospu", "piç", "siktir", "amcık", "göt", "pezevenk", "yarak", "taşak", "sikik", "ibne", "eşcinsel", "top", "puşt",
   "kahpe", "döl", "bok", "salak", "aptal", "gerizekalı", "beyinsiz", "mal", "sik", "yarrak", "am", "porno",
   "sex", "vajina", "penis", "meme", "göt", "anal", "oral", "sikiş", "seks", "cinsel", "erotik", "çıplak", "pornografi", "mastürbasyon", "tecavüz", "ensest",
-  "sakso", "grupseks", "oral seks", "anal seks", "grup seks" // Yeni eklenen kelimeler
+  "sakso", "grupseks", "oral seks", "anal seks", "grup seks",
+  "sülale", "sülaleni" // Yeni eklenen kelimeler
 ]);
 
 // Alt dize olarak eşleşmesi gereken yasaklı kelimeler (includes kullanılarak)
