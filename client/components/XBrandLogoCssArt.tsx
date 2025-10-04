@@ -6,10 +6,10 @@ interface XBrandLogoCssArtProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 const XBrandLogoCssArt: React.FC<XBrandLogoCssArtProps> = ({ size = 24, className, ...props }) => {
-  // CSS değişkenini ve cqw/cqh dönüşümlerini hesaplamak için stil
+  // CSS değişkenini hesaplamak için stil
   const containerStyle = {
     '--size': `${size}px`,
-    color: 'rgb(239, 243, 244)', // Orijinal CSS'teki renk
+    // color: 'rgb(239, 243, 244)', // Bu satırı kaldırarak rengin parent'tan gelmesini sağlıyoruz
   } as React.CSSProperties;
 
   return (
@@ -21,10 +21,10 @@ const XBrandLogoCssArt: React.FC<XBrandLogoCssArtProps> = ({ size = 24, classNam
       <div
         className="absolute border-solid"
         style={{
-          borderTopWidth: `calc(var(--size) * 0.062)`,
-          borderBottomWidth: `calc(var(--size) * 0.062)`,
-          borderLeftWidth: `calc(var(--size) * 0.069)`,
-          borderRightWidth: `calc(var(--size) * 0.069)`,
+          borderTopWidth: `calc(var(--size) * 0.07)`, // Hafifçe kalınlaştırıldı
+          borderBottomWidth: `calc(var(--size) * 0.07)`, // Hafifçe kalınlaştırıldı
+          borderLeftWidth: `calc(var(--size) * 0.08)`, // Hafifçe kalınlaştırıldı
+          borderRightWidth: `calc(var(--size) * 0.08)`, // Hafifçe kalınlaştırıldı
           top: 0,
           left: `calc(50% - var(--size) * 0.142)`,
           width: `calc(var(--size) * 0.28)`,
@@ -35,7 +35,7 @@ const XBrandLogoCssArt: React.FC<XBrandLogoCssArtProps> = ({ size = 24, classNam
       <div
         className="absolute w-0 border-solid bg-current"
         style={{
-          borderWidth: `calc(var(--size) * 0.042)`,
+          borderWidth: `calc(var(--size) * 0.05)`, // Hafifçe kalınlaştırıldı
           height: `calc(var(--size) * 0.45)`,
           transform: 'skew(-41deg)',
           top: 0,
@@ -46,7 +46,7 @@ const XBrandLogoCssArt: React.FC<XBrandLogoCssArtProps> = ({ size = 24, classNam
       <div
         className="absolute w-0 border-solid bg-current"
         style={{
-          borderWidth: `calc(var(--size) * 0.042)`,
+          borderWidth: `calc(var(--size) * 0.05)`, // Hafifçe kalınlaştırıldı
           height: `calc(var(--size) * 0.45)`,
           transform: 'skew(-41deg)',
           left: `calc(50% - var(--size) * 0.304)`,
