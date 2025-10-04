@@ -22,7 +22,7 @@ export default function Footer() {
               <Instagram size={24} />
             </a>
             <a href="https://twitter.com/your-twitter" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-brand-cyan transition-colors">
-              <X size={24} /> {/* Twitter ikonunu X olarak kullandık */}
+              <X size={24} className="rotate-6" /> {/* X ikonuna rotate-6 sınıfı eklendi */}
             </a>
             <a href="https://linkedin.com/in/your-linkedin" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-brand-cyan transition-colors">
               <Linkedin size={24} />
