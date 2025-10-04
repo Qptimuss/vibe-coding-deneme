@@ -5,6 +5,7 @@ import { createServer } from "./server";
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
+  base: "/vibe-coding-deneme/", // GitHub Pages depo adınızla eşleşmeli
   server: {
     host: "::",
     port: 8080,

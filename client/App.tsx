@@ -25,7 +25,7 @@ const App = () => (
     <TooltipProvider>
       <Toaster />
       <Sonner />
-      <BrowserRouter>
+      <BrowserRouter basename="/vibe-coding-deneme"> {/* GitHub Pages depo adınızla eşleşmeli */}
         <SessionContextProvider>
           <Navbar />
           <Routes>
