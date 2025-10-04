@@ -12,19 +12,12 @@ const XBrandLogo: React.FC<XBrandLogoProps> = ({ size = 24, className, ...props 
       width={size}
       height={size}
       viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
+      fill="currentColor" // X logosu genellikle dolgulu olduğu için fill="currentColor" kullanıldı
       className={cn(className)}
       {...props}
     >
-      {/* Bu SVG yolu, sağladığınız görseldeki stilize X logosunu temsil eder. */}
-      <path d="M18 6 6 18" />
-      <path d="m6 6 12 12" />
-      <path d="M12 2v20" />
-      <path d="M2 12h20" />
+      {/* Bu SVG yolu, X (eski adıyla Twitter) uygulamasının logosunu temsil eder. */}
+      <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-6.597-8.717L5.067 22.75H1.75l8.879-10.15L1.75 2.25h4.272l5.015 6.25L18.244 2.25z"/>
     </svg>
   );
 };
