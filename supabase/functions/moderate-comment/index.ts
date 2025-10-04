@@ -19,17 +19,17 @@ function createSpammyRegex(word: string): string {
 // Tam kelime olarak eşleşmesi gereken yasaklı kelimeler (regex ile \b kullanılarak)
 const WHOLE_WORD_BANNED = new Set([
   "nigger", "fuck", "shit", "cunt", "asshole", "bitch", "bastard", "motherfucker", "faggot", "retard", "idiot", "moron",
-  "kancık", "orospu", "piç", "siktir", "amcık", "göt", "pezevenk", "yarak", "taşak", "sikik", "ibne", "eşcinsel", "top", "puşt",
-  "kahpe", "döl", "bok", "salak", "aptal", "gerizekalı", "beyinsiz", "mal", "sik", "yarrak", "am", "porno",
-  "sex", "vajina", "penis", "meme", "göt", "anal", "oral", "sikiş", "seks", "cinsel", "erotik", "çıplak", "pornografi", "mastürbasyon", "tecavüz", "ensest",
+  "kancık", "orospu", "piç", "puşt", "kahpe", "döl", "bok", "salak", "aptal", "gerizekalı", "beyinsiz", "mal", "ibne", "eşcinsel", "top",
+  "porno", "sex", "vajina", "penis", "meme", "anal", "oral", "sikiş", "seks", "cinsel", "erotik", "çıplak", "pornografi", "mastürbasyon", "tecavüz", "ensest",
   "sakso", "grupseks", "oral seks", "anal seks", "grup seks",
-  "sülale", "sülaleni", // Ailevi hakaretler
-  "domal", "domalmak", "domalan", "domalt", "domaltmak", "domaltan" // Cinsel içerikli kelimeler
+  "sülale", "sülaleni" // Ailevi hakaretler
 ]);
 
 // Alt dize olarak eşleşmesi gereken yasaklı kelimeler (includes kullanılarak)
 const SUBSTRING_BANNED = new Set([
-  "amk", "aq", "oç", "sikerim", "siktir git", "ananı", "babana", "yavşak", "gavat", "siktir lan", "götveren", "orosbu", "piçin", "ananın", "lan"
+  "amk", "aq", "oç", "sikerim", "siktir git", "ananı", "babana", "yavşak", "gavat", "siktir lan", "götveren", "orosbu", "piçin", "ananın", "lan",
+  "anan", // Yeni eklenen kelime
+  "domal", "sik", "yarrak", "am", "göt" // WHOLE_WORD_BANNED'den taşınan kelimeler
 ]);
 
 serve(async (req) => {
