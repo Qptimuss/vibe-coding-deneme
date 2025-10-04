@@ -9,7 +9,6 @@ const XBrandLogoCssArt: React.FC<XBrandLogoCssArtProps> = ({ size = 24, classNam
   // CSS değişkenini hesaplamak için stil
   const containerStyle = {
     '--size': `${size}px`,
-    // color: 'rgb(239, 243, 244)', // Bu satırı kaldırarak rengin parent'tan gelmesini sağlıyoruz
   } as React.CSSProperties;
 
   return (
@@ -21,10 +20,10 @@ const XBrandLogoCssArt: React.FC<XBrandLogoCssArtProps> = ({ size = 24, classNam
       <div
         className="absolute border-solid"
         style={{
-          borderTopWidth: `calc(var(--size) * 0.1)`, // Daha da kalınlaştırıldı
-          borderBottomWidth: `calc(var(--size) * 0.1)`, // Daha da kalınlaştırıldı
-          borderLeftWidth: `calc(var(--size) * 0.11)`, // Daha da kalınlaştırıldı
-          borderRightWidth: `calc(var(--size) * 0.11)`, // Daha da kalınlaştırıldı
+          borderTopWidth: `calc(var(--size) * 0.15)`, // Daha da kalınlaştırıldı
+          borderBottomWidth: `calc(var(--size) * 0.15)`, // Daha da kalınlaştırıldı
+          borderLeftWidth: `calc(var(--size) * 0.16)`, // Daha da kalınlaştırıldı
+          borderRightWidth: `calc(var(--size) * 0.16)`, // Daha da kalınlaştırıldı
           top: 0,
           left: `calc(50% - var(--size) * 0.142)`,
           width: `calc(var(--size) * 0.28)`,
@@ -35,7 +34,7 @@ const XBrandLogoCssArt: React.FC<XBrandLogoCssArtProps> = ({ size = 24, classNam
       <div
         className="absolute w-0 border-solid bg-current"
         style={{
-          borderWidth: `calc(var(--size) * 0.08)`, // Daha da kalınlaştırıldı
+          borderWidth: `calc(var(--size) * 0.12)`, // Daha da kalınlaştırıldı
           height: `calc(var(--size) * 0.45)`,
           transform: 'skew(-41deg)',
           top: 0,
@@ -46,7 +45,7 @@ const XBrandLogoCssArt: React.FC<XBrandLogoCssArtProps> = ({ size = 24, classNam
       <div
         className="absolute w-0 border-solid bg-current"
         style={{
-          borderWidth: `calc(var(--size) * 0.08)`, // Daha da kalınlaştırıldı
+          borderWidth: `calc(var(--size) * 0.12)`, // Daha da kalınlaştırıldı
           height: `calc(var(--size) * 0.45)`,
           transform: 'skew(-41deg)',
           left: `calc(50% - var(--size) * 0.304)`,

@@ -1,7 +1,11 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react'; // useState ve useEffect import edildi
 import { Link } from 'react-router-dom';
 import { Github, Instagram, Linkedin } from 'lucide-react';
 import XBrandLogoCssArt from '@/components/XBrandLogoCssArt';
+import { Button } from "@/components/ui/button";
+import { Sheet, SheetContent, SheetTrigger, SheetClose } from "@/components/ui/sheet";
+import { Menu } from "lucide-react";
+
 
 export default function Footer() {
   return (
@@ -23,7 +27,7 @@ export default function Footer() {
               <Instagram size={24} />
             </a>
             <a href="https://twitter.com/your-twitter" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-brand-cyan transition-colors">
-              <XBrandLogoCssArt size={24} className="text-gray-400 hover:text-brand-cyan transition-colors" /> {/* Buraya hover efektini ekledik */}
+              <XBrandLogoCssArt size={24} /> {/* className prop'u buradan kaldırıldı */}
             </a>
             <a href="https://linkedin.com/in/your-linkedin" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-brand-cyan transition-colors">
               <Linkedin size={24} />
