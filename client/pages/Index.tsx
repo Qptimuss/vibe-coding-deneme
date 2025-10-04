@@ -109,7 +109,7 @@ export default function Index() {
         <div className="grid md:grid-cols-2 lg:grid-cols-2 gap-8 lg:gap-12">
           {[1, 2, 3].map((item) => (
             <div key={item} className="relative">
-              <div className="bg-brand-card rounded-[38px] pt-36 pb-6 px-8 text-center"> {/* pt-28'den pt-36'ya yükseltildi */}
+              <div className="bg-brand-card rounded-[38px] pt-40 pb-6 px-8 text-center"> {/* pt-36'dan pt-40'a yükseltildi */}
                 <div className="absolute top-[-78px] left-1/2 -translate-x-1/2">
                   <div className="relative">
                     <img 
