@@ -10,11 +10,17 @@ const corsHeaders = {
 // Toksisite eşiği: Bu değerin üzerindeki puanlar toksik kabul edilir.
 const TOXICITY_THRESHOLD = 0.5; 
 
+// Helper to create a regex pattern that allows for character repetitions
+// e.g., "porno" -> "p+o+r+n+o+"
+function createSpammyRegex(word: string): string {
+  return word.split('').map(char => `${char}+`).join('');
+}
+
 // Tam kelime olarak eşleşmesi gereken yasaklı kelimeler (regex ile \b kullanılarak)
 const WHOLE_WORD_BANNED = new Set([
   "nigger", "fuck", "shit", "cunt", "asshole", "bitch", "bastard", "motherfucker", "faggot", "retard", "idiot", "moron",
   "kancık", "orospu", "piç", "siktir", "amcık", "göt", "pezevenk", "yarak", "taşak", "sikik", "ibne", "eşcinsel", "top", "puşt",
-  "kahpe", "döl", "bok", "salak", "aptal", "gerizekalı", "beyinsiz", "mal", "sik", "yarrak", "am"
+  "kahpe", "döl", "bok", "salak", "aptal", "gerizekalı", "beyinsiz", "mal", "sik", "yarrak", "am", "porno" // 'porno' eklendi
 ]);
 
 // Alt dize olarak eşleşmesi gereken yasaklı kelimeler (includes kullanılarak)
@@ -46,17 +52,16 @@ serve(async (req) => {
       Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? ""
     );
 
-    // 1. Açık anahtar kelime kontrolü
+    // 1. Açık anahtar kelime kontrolü (harf tekrarlarını dikkate alarak)
     const lowerCaseContent = content.toLowerCase();
     let containsBannedWord = false;
 
     // Tam kelime eşleşmesi kontrolü
     for (const word of WHOLE_WORD_BANNED) {
-      // \b kelime sınırını temsil eder, böylece "ama" içindeki "am" eşleşmez
-      const wordRegex = new RegExp(`\\b${word}\\b`, 'i'); 
-      if (wordRegex.test(lowerCaseContent)) {
+      const spammyWordRegex = new RegExp(`\\b${createSpammyRegex(word)}\\b`, 'i'); 
+      if (spammyWordRegex.test(lowerCaseContent)) {
         containsBannedWord = true;
-        console.log(`Comment flagged by WHOLE_WORD_BANNED (regex): '${word}' in '${content}'`);
+        console.log(`Comment flagged by WHOLE_WORD_BANNED (spammy regex): '${word}' in '${content}'`);
         break;
       }
     }
@@ -64,9 +69,10 @@ serve(async (req) => {
     // Eğer henüz işaretlenmediyse, alt dize eşleşmesi kontrolü
     if (!containsBannedWord) {
       for (const word of SUBSTRING_BANNED) {
-        if (lowerCaseContent.includes(word)) {
+        const spammySubstringRegex = new RegExp(createSpammyRegex(word), 'i');
+        if (spammySubstringRegex.test(lowerCaseContent)) {
           containsBannedWord = true;
-          console.log(`Comment flagged by SUBSTRING_BANNED (includes): '${word}' in '${content}'`);
+          console.log(`Comment flagged by SUBSTRING_BANNED (spammy regex): '${word}' in '${content}'`);
           break;
         }
       }
