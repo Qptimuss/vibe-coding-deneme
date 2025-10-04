@@ -10,19 +10,16 @@ const corsHeaders = {
 // Toksisite eşiği: Bu değerin üzerindeki puanlar toksik kabul edilir.
 const TOXICITY_THRESHOLD = 0.5; 
 
-// Açıkça yasaklı kelimeler listesi (hem Türkçe hem İngilizce)
-const BANNED_WORDS = new Set([
-  "nigger", "fuck", "shit", "cunt", "asshole", "bitch", "bastard", "motherfucker",
-  "faggot", "retard", "idiot", "moron", "kancık", "orospu", "piç", "siktir", "amcık",
-  "göt", "pezevenk", "yarak", "taşak", "sikik", "ibne", "eşcinsel", "top", "puşt",
-  "kahpe", "döl", "bok", "salak", "aptal", "gerizekalı", "beyinsiz", "mal", "lan", "amk", "aq",
-  "sikerim", "siktir git", "ananı", "babana", "oç", "yavşak", "gavat", "sik", "yarrak", "am",
-  "piçin", "orosbu", "siktir lan", "götveren", "pezevenk", "ibne", "salak", "aptal", "gerizekalı",
-  "beyinsiz", "mal", "lan", "amk", "aq", "siktir", "siktir git", "ananın", "babana", "oç", "yavşak",
-  "gavat", "sik", "yarrak", "am", "piçin", "orosbu", "siktir lan", "götveren", "pezevenk", "ibne",
-  "salak", "aptal", "gerizekalı", "beyinsiz", "mal", "lan", "amk", "aq", "sikerim", "siktir git",
-  "ananı", "babana", "oç", "yavşak", "gavat", "sik", "yarrak", "am", "piçin", "orosbu", "siktir lan",
-  "götveren", "pezevenk", "ibne", "salak", "aptal", "gerizekalı", "beyinsiz", "mal", "lan", "amk", "aq"
+// Tam kelime olarak eşleşmesi gereken yasaklı kelimeler (regex ile \b kullanılarak)
+const WHOLE_WORD_BANNED = new Set([
+  "nigger", "fuck", "shit", "cunt", "asshole", "bitch", "bastard", "motherfucker", "faggot", "retard", "idiot", "moron",
+  "kancık", "orospu", "piç", "siktir", "amcık", "göt", "pezevenk", "yarak", "taşak", "sikik", "ibne", "eşcinsel", "top", "puşt",
+  "kahpe", "döl", "bok", "salak", "aptal", "gerizekalı", "beyinsiz", "mal", "sik", "yarrak", "am"
+]);
+
+// Alt dize olarak eşleşmesi gereken yasaklı kelimeler (includes kullanılarak)
+const SUBSTRING_BANNED = new Set([
+  "amk", "aq", "oç", "sikerim", "siktir git", "ananı", "babana", "yavşak", "gavat", "siktir lan", "götveren", "orosbu", "piçin", "ananın", "lan"
 ]);
 
 serve(async (req) => {
@@ -52,15 +49,31 @@ serve(async (req) => {
     // 1. Açık anahtar kelime kontrolü
     const lowerCaseContent = content.toLowerCase();
     let containsBannedWord = false;
-    for (const word of BANNED_WORDS) {
-      if (lowerCaseContent.includes(word)) {
+
+    // Tam kelime eşleşmesi kontrolü
+    for (const word of WHOLE_WORD_BANNED) {
+      // \b kelime sınırını temsil eder, böylece "ama" içindeki "am" eşleşmez
+      const wordRegex = new RegExp(`\\b${word}\\b`, 'i'); 
+      if (wordRegex.test(lowerCaseContent)) {
         containsBannedWord = true;
+        console.log(`Comment flagged by WHOLE_WORD_BANNED (regex): '${word}' in '${content}'`);
         break;
       }
     }
 
+    // Eğer henüz işaretlenmediyse, alt dize eşleşmesi kontrolü
+    if (!containsBannedWord) {
+      for (const word of SUBSTRING_BANNED) {
+        if (lowerCaseContent.includes(word)) {
+          containsBannedWord = true;
+          console.log(`Comment flagged by SUBSTRING_BANNED (includes): '${word}' in '${content}'`);
+          break;
+        }
+      }
+    }
+
     if (containsBannedWord) {
-      console.log(`Comment flagged by explicit keyword filter: '${content}' contains a banned word.`);
+      console.log("Comment flagged by explicit keyword filter.");
       await supabaseAdmin
         .from("comments")
         .update({ is_moderated: false })
