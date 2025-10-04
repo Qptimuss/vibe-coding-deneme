@@ -25,6 +25,7 @@ serve(async (req) => {
 
   try {
     const { commentId, content } = await req.json();
+    console.log("Received comment for moderation:", { commentId, content }); // Girişi logla
 
     const huggingfaceApiKey = Deno.env.get("HUGGINGFACE_API_KEY");
     if (!huggingfaceApiKey) {
@@ -34,6 +35,7 @@ serve(async (req) => {
         status: 500,
       });
     }
+    console.log("Hugging Face API key is present."); // API anahtarının varlığını onayla
 
     const supabaseAdmin = createClient(
       Deno.env.get("SUPABASE_URL") ?? "",
@@ -51,6 +53,7 @@ serve(async (req) => {
     }
 
     if (containsBannedWord) {
+      console.log("Comment flagged by explicit keyword filter.");
       await supabaseAdmin
         .from("comments")
         .update({ is_moderated: false })
@@ -68,31 +71,48 @@ serve(async (req) => {
 
     // 2. Hugging Face toksisite denetimi (eğer yasaklı kelime bulunmazsa)
     const hf = new HfInference(huggingfaceApiKey);
-    // Yeni çok dilli modeli kullanıyoruz
-    const moderationResponse = await hf.textClassification({
-      model: 'oliverguhr/bert-base-multilingual-cased-finetuned-toxic-comment-classification',
-      inputs: content,
-    });
+    let moderationResponse;
+    try {
+      moderationResponse = await hf.textClassification({
+        model: 'oliverguhr/bert-base-multilingual-cased-finetuned-toxic-comment-classification',
+        inputs: content,
+      });
+      console.log("Hugging Face moderation response:", moderationResponse); // HF yanıtını logla
+    } catch (hfError: any) {
+      console.error("Error calling Hugging Face API:", hfError.message || hfError);
+      // Hugging Face API çağrısı başarısız olursa yorumu denetlenmemiş olarak işaretle
+      await supabaseAdmin
+        .from("comments")
+        .update({ is_moderated: false }) 
+        .eq("id", commentId);
+      return new Response(JSON.stringify({
+        error: "Hugging Face API call failed.",
+        details: hfError.message || "Unknown error from Hugging Face API.",
+        is_moderated: false,
+      }), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: 500,
+      });
+    }
 
     let toxicScore = 0;
-    // Bu modelin çıktısı biraz farklı olabilir, genellikle 'toxic' veya benzeri bir etiket ararız.
-    // Modelin çıktısını kontrol edip en yüksek toksisite puanını alalım.
-    const toxicLabel = moderationResponse.find(item => item.label === 'toxic'); // 'toxic' etiketini arıyoruz
+    const toxicLabel = moderationResponse.find(item => item.label === 'toxic');
     if (toxicLabel) {
       toxicScore = toxicLabel.score;
+      console.log("Found 'toxic' label with score:", toxicScore);
     } else {
-      // Eğer 'toxic' etiketi yoksa, diğer olumsuz etiketleri de kontrol edebiliriz
-      // veya varsayılan olarak en yüksek puanı alabiliriz.
-      // Şimdilik, en yüksek puanı alalım ve eşikle karşılaştıralım.
-      const highestScoreLabel = moderationResponse.reduce((prev, current) => (prev.score > current.score) ? prev : current);
-      if (highestScoreLabel.label !== 'not toxic') { // 'not toxic' değilse
-        toxicScore = highestScoreLabel.score;
-      }
+      // Eğer 'toxic' etiketi açıkça bulunamazsa, varsayılan olarak toksik olmadığını varsayalım.
+      // Bu model için 'toxic' veya 'not toxic' etiketleri beklenir.
+      // Eğer 'toxic' yoksa, muhtemelen 'not toxic'tir veya beklenmedik bir çıktı vardır.
+      console.warn("Explicit 'toxic' label not found in Hugging Face response. Assuming non-toxic.");
+      toxicScore = 0; // 'toxic' etiketi bulunamazsa 0 olarak ayarla
     }
 
     const isToxic = toxicScore > TOXICITY_THRESHOLD;
+    console.log(`Toxicity score: ${toxicScore}, Threshold: ${TOXICITY_THRESHOLD}, Is toxic: ${isToxic}`);
 
     if (isToxic) {
+      console.log("Comment flagged by AI moderation.");
       await supabaseAdmin
         .from("comments")
         .update({ is_moderated: false })
@@ -107,6 +127,7 @@ serve(async (req) => {
         status: 200,
       });
     } else {
+      console.log("Comment passed moderation.");
       await supabaseAdmin
         .from("comments")
         .update({ is_moderated: true })
@@ -121,8 +142,8 @@ serve(async (req) => {
         status: 200,
       });
     }
-  } catch (error) {
-    console.error("Error moderating comment with Hugging Face:", error);
+  } catch (error: any) {
+    console.error("Unhandled error in moderate-comment function:", error.message || error);
     return new Response(JSON.stringify({ error: error.message || "An unknown error occurred in the moderation function." }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
       status: 500,
