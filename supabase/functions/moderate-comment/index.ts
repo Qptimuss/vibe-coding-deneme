@@ -1,6 +1,6 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.45.0';
-import { HfInference } from 'https://esm.sh/@huggingface/inference@2.7.0'; // Hugging Face Inference client'ı eklendi
+import { HfInference } from 'https://esm.sh/@huggingface/inference@2.7.0';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -8,7 +8,16 @@ const corsHeaders = {
 };
 
 // Toksisite eşiği: LABEL_1 (toksik) puanı bu değerin üzerindeyse yorum toksik kabul edilir.
-const TOXICITY_THRESHOLD = 0.7; 
+// Daha hassas olmak için eşik düşürüldü.
+const TOXICITY_THRESHOLD = 0.5; 
+
+// Açıkça yasaklı kelimeler listesi
+const BANNED_WORDS = new Set([
+  "nigger", "fuck", "shit", "cunt", "asshole", "bitch", "bastard", "motherfucker",
+  "faggot", "retard", "idiot", "moron", "kancık", "orospu", "piç", "siktir", "amcık",
+  "göt", "pezevenk", "yarak", "taşak", "sikik", "ibne", "eşcinsel", "top", "puşt",
+  "kahpe", "döl", "bok", "salak", "aptal", "gerizekalı", "beyinsiz", "mal", "lan", "amk", "aq"
+]);
 
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
@@ -27,26 +36,51 @@ serve(async (req) => {
       });
     }
 
-    const hf = new HfInference(huggingfaceApiKey);
-
-    // Hugging Face'in toxic-bert modelini kullanarak metni sınıflandır
-    const moderationResponse = await hf.textClassification({
-      model: 'unitary/toxic-bert', // Toksisite denetimi için popüler bir model
-      inputs: content,
-    });
-
-    let toxicScore = 0;
-    const toxicLabel = moderationResponse.find(item => item.label === 'LABEL_1'); // LABEL_1 genellikle toksik anlamına gelir
-    if (toxicLabel) {
-      toxicScore = toxicLabel.score;
-    }
-
-    const isToxic = toxicScore > TOXICITY_THRESHOLD; // Toksisite eşiğine göre karar ver
-
     const supabaseAdmin = createClient(
       Deno.env.get("SUPABASE_URL") ?? "",
       Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? ""
     );
+
+    // 1. Açık anahtar kelime kontrolü
+    const lowerCaseContent = content.toLowerCase();
+    let containsBannedWord = false;
+    for (const word of BANNED_WORDS) {
+      if (lowerCaseContent.includes(word)) {
+        containsBannedWord = true;
+        break;
+      }
+    }
+
+    if (containsBannedWord) {
+      await supabaseAdmin
+        .from("comments")
+        .update({ is_moderated: false })
+        .eq("id", commentId);
+
+      return new Response(JSON.stringify({
+        message: "Comment flagged by explicit keyword filter. It will not be publicly visible.",
+        is_moderated: false,
+        toxicity_score: 1.0, // Yasaklı kelime içerdiği için en yüksek toksisite puanı
+      }), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: 200,
+      });
+    }
+
+    // 2. Hugging Face toksisite denetimi (eğer yasaklı kelime bulunmazsa)
+    const hf = new HfInference(huggingfaceApiKey);
+    const moderationResponse = await hf.textClassification({
+      model: 'unitary/toxic-bert',
+      inputs: content,
+    });
+
+    let toxicScore = 0;
+    const toxicLabel = moderationResponse.find(item => item.label === 'LABEL_1');
+    if (toxicLabel) {
+      toxicScore = toxicLabel.score;
+    }
+
+    const isToxic = toxicScore > TOXICITY_THRESHOLD;
 
     if (isToxic) {
       await supabaseAdmin
@@ -55,7 +89,7 @@ serve(async (req) => {
         .eq("id", commentId);
 
       return new Response(JSON.stringify({
-        message: "Comment flagged by moderation. It will not be publicly visible.",
+        message: "Comment flagged by AI moderation. It will not be publicly visible.",
         is_moderated: false,
         toxicity_score: toxicScore,
       }), {
